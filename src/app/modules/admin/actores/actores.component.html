@@ -1,0 +1,102 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <div class="flex-1 min-w-0">
+            <!-- Breadcrumbs -->
+            <div class="flex flex-wrap items-center font-medium">
+                <div>
+                    <a class="whitespace-nowrap text-primary-500">Social</a>
+                </div>
+                <div class="flex items-center ml-1 whitespace-nowrap">
+                    <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
+                    <a class="ml-1 text-primary-500">Mapeo de Actores</a>
+                </div>
+            </div>
+            <!-- Title -->
+            <div class="mt-2">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    Base de datos de actores
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+
+        <!-- CONTENT GOES HERE -->
+        <div class="h-400 min-h-400 max-h-400 border-2 border-dashed border-gray-300 rounded-2xl">
+            <router-outlet></router-outlet>
+            <div class="mat-elevation-z8">
+                <table mat-table matSort [dataSource]="dataSource">
+
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="ActOperativa_Nom">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.ActOperativa_Nom}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="ActorEntidad_Nom">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </th>
+                        <td mat-cell *matCellDef="let element"> {{element.ActorEntidad_Nom}} </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="CPoblado_Nom">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </th>
+                        <td mat-cell *matCellDef="let element"> {{element.CPoblado_Nom}} </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="Distrito_Nom">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> direcion </th>
+                        <td mat-cell *matCellDef="let element"> {{element.Distrito_Nom}} </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="TipoActor_Abrev">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> direcion </th>
+                        <td mat-cell *matCellDef="let element"> {{element.TipoActor_Abrev}} </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="v_siglas_oficina">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> direcion </th>
+                        <td mat-cell *matCellDef="let element"> {{element.v_siglas_oficina}} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                        <td mat-cell *matCellDef="let element">
+                            <!-- <button mat-icon-button color="primary" aria-label="Example icon button with a vertical three dot icon" [routerLink]="['edicion', element.idPaciente]" routerLinkActive="router-link-active">
+                                <mat-icon>ballot</mat-icon>
+                              </button>
+                            <button mat-icon-button color="accent" (click)="eliminarPaciente(element.idPaciente)" aria-label="Example icon button with a home icon">
+                                <mat-icon>delete</mat-icon> 
+                              </button> -->
+                        </td>
+
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+                <div>
+                    <button mat-fab color="primary" style="float: right" routerLink="/social/actores/nuevo">
+                      <mat-icon>create</mat-icon>
+                    </button>
+                </div>
+
+                <!-- <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 100]" [length]="cantidad" (page)="mostrarMas($event)"></mat-paginator> -->
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
