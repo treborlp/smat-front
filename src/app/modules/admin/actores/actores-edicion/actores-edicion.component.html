@@ -15,9 +15,10 @@
                     <mat-step [formGroupName]="'step1'" [stepControl]="horizontalStepperForm.get('step1')" #horizontalStepperStep1>
                         <ng-template matStepLabel>Investigador</ng-template>
                         <p class="my-6 font-medium">
-                            Llene los datos de la dirección y la actividad operativa
+                            Complete los siguientes campos
                         </p>
-                        <div class="flex">
+                        <div class="flex flex-col gt-xs:flex-row">
+
                             <mat-form-field class="flex-auto gt-xs:pr-3">
                                 <mat-select [formControlName]="'oficina'" [placeholder]="'Oficina'" required>
                                     <mat-option value="country-1">Country 1</mat-option>
@@ -27,60 +28,64 @@
                                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
                             </mat-form-field>
 
-                            <mat-form-field class="flex-auto">
-                                <input matInput [formControlName]="'email'" [placeholder]="'Email Address'" required>
-                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                            </mat-form-field>
-                        </div>
-                        <div class="flex flex-col gt-xs:flex-row">
                             <mat-form-field class="flex-auto gt-xs:pr-3">
-                                <mat-select [formControlName]="'country'" [placeholder]="'Country / Region'" required>
+                                <mat-select formControlName="actividadOperativa" [placeholder]="'Actividad Operativa'" required>
                                     <mat-option value="country-1">Country 1</mat-option>
                                     <mat-option value="country-2">Country 2</mat-option>
                                     <mat-option value="country-3">Country 3</mat-option>
                                 </mat-select>
                                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
                             </mat-form-field>
-                            <mat-form-field class="flex-auto gt-xs:pl-3">
-                                <mat-select [formControlName]="'language'" [placeholder]="'Language'" required>
-                                    <mat-option value="language-1">Language 1</mat-option>
-                                    <mat-option value="language-2">Language 2</mat-option>
-                                    <mat-option value="language-3">Language 3</mat-option>
+
+                            <mat-form-field class="flex-auto gt-xs:pr-3">
+                                <mat-select formControlName="personal" [placeholder]="'Colaborador encargado'" required>
+                                    <mat-option value="country-1">Country 1</mat-option>
+                                    <mat-option value="country-2">Country 2</mat-option>
+                                    <mat-option value="country-3">Country 3</mat-option>
                                 </mat-select>
-                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:translate'"></mat-icon>
+                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
                             </mat-form-field>
                         </div>
+
                         <div class="flex justify-end">
                             <button class="px-8" mat-flat-button [color]="'primary'" [disabled]="horizontalStepperStep1.stepControl.pristine || horizontalStepperStep1.stepControl.invalid" type="button" matStepperNext>
                                 Next
                             </button>
                         </div>
                     </mat-step>
-
                     <mat-step [formGroupName]="'step2'" [stepControl]="horizontalStepperForm.get('step2')" #horizontalStepperStep2>
-                        <ng-template matStepLabel>Profile</ng-template>
+                        <ng-template matStepLabel>Formato de entrega</ng-template>
                         <p class="my-6 font-medium">
-                            People here will get to know you with this information
+                            Complete los siguientes campos
                         </p>
                         <div class="flex flex-col gt-xs:flex-row">
+
                             <mat-form-field class="flex-auto gt-xs:pr-3">
-                                <input matInput [formControlName]="'firstName'" [placeholder]="'First name'" required>
+                                <input matInput [formControlName]="'unidadMedida'" [placeholder]="'Unidad de Medida'" required>
                                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
                             </mat-form-field>
+
                             <mat-form-field class="flex-auto gt-xs:pl-3">
-                                <input matInput [formControlName]="'lastName'" [placeholder]="'Last name'" required>
+                                <input matInput [formControlName]="'viaEntrega'" [placeholder]="'Via de Entrega'" required>
                                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
                             </mat-form-field>
+
                         </div>
+
                         <div class="flex">
-                            <mat-form-field class="flex-auto">
-                                <input matInput [formControlName]="'userName'" [placeholder]="'Username'" required>
-                                <span matPrefix>www.example.com/</span>
+                            <mat-form-field class="flex-auto gt-xs:pl-3">
+                                <mat-label class="my-6 font-medium">Seleccionar fecha de consulta</mat-label>
+                                <input matInput [matDatepicker]="picker" [(ngModel)]="fechaSeleccionada" formControlName="fecha" [max]="maxFecha">
+                                <mat-datepicker-toggle matSuffix [for]="picker">
+                                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
                             </mat-form-field>
                         </div>
+
                         <div class="flex">
                             <mat-form-field class="fuse-mat-textarea flex-auto">
-                                <textarea matInput [formControlName]="'about'" [placeholder]="'About'" [rows]="3"></textarea>
+                                <textarea matInput [formControlName]="'estrategia'" [placeholder]="'Estrategia de Comunicación'" [rows]="3"></textarea>
                                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:menu-alt-2'"></mat-icon>
                             </mat-form-field>
                         </div>
@@ -95,39 +100,75 @@
                     </mat-step>
 
                     <mat-step [formGroupName]="'step3'" [stepControl]="horizontalStepperForm.get('step3')">
-                        <ng-template matStepLabel>Notifications</ng-template>
+                        <ng-template matStepLabel>Registro del Actor</ng-template>
                         <p class="my-6 font-medium">
-                            We'll always let you know about important changes, but you pick what else you want to hear about.
+                            Completa los registros del actor
                         </p>
                         <div class="flex flex-col gt-sm:flex-row">
                             <div class="flex flex-col">
-                                <span class="font-medium mb-2">By Email</span>
-                                <div class="flex flex-col" [formGroupName]="'byEmail'">
-                                    <mat-checkbox class="mb-1" [color]="'primary'" [formControlName]="'companyNews'">
-                                        Company News
-                                    </mat-checkbox>
-                                    <mat-checkbox class="mb-1" [color]="'primary'" [formControlName]="'featuredProducts'">
-                                        Featured Products
-                                    </mat-checkbox>
-                                    <mat-checkbox [color]="'primary'" [formControlName]="'messages'">
-                                        Messages
-                                    </mat-checkbox>
-                                </div>
+                                <mat-form-field class="flex-auto gt-xs:pr-3">
+                                    <mat-select formControlName="tipoActor" [placeholder]="'Tipo de actor'" required>
+                                        <mat-option value="country-1">Tipo 1</mat-option>
+                                        <mat-option value="country-2">Tipo 2</mat-option>
+                                        <mat-option value="country-3">Tipo 3</mat-option>
+                                    </mat-select>
+                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                </mat-form-field>
                             </div>
-                            <div class="flex flex-col mt-8 gt-sm:mt-0 gt-sm:ml-16">
-                                <span class="font-medium mb-2">Push Notifications</span>
-                                <mat-radio-group class="flex flex-col" [color]="'primary'" [formControlName]="'pushNotifications'">
-                                    <mat-radio-button class="mb-2" [value]="'everything'">
-                                        Everything
-                                    </mat-radio-button>
-                                    <mat-radio-button class="mb-2" [value]="'just-good'">
-                                        Just the good stuff
-                                    </mat-radio-button>
-                                    <mat-radio-button [value]="'no-push'">
-                                        No push notifications
-                                    </mat-radio-button>
-                                </mat-radio-group>
+
+                            <mat-form-field class="flex-auto gt-xs:pr-3">
+                                <input matInput [formControlName]="'nombreActor'" [placeholder]="'Nombre del Actor'" required>
+                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            </mat-form-field>
+
+                            <p class="my-6 font-medium">
+                                Ubiación geográfica
+                            </p>
+
+                            <div class="flex flex-col">
+                                <mat-form-field class="flex-auto gt-xs:pr-3">
+                                    <mat-select formControlName="departamento" [placeholder]="'Departamento'" required>
+                                        <mat-option value="country-1">Tipo 1</mat-option>
+                                        <mat-option value="country-2">Tipo 2</mat-option>
+                                        <mat-option value="country-3">Tipo 3</mat-option>
+                                    </mat-select>
+                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                </mat-form-field>
                             </div>
+
+                            <div class="flex flex-col">
+                                <mat-form-field class="flex-auto gt-xs:pr-3">
+                                    <mat-select formControlName="provincia" [placeholder]="'Provincia'" required>
+                                        <mat-option value="country-1">Tipo 1</mat-option>
+                                        <mat-option value="country-2">Tipo 2</mat-option>
+                                        <mat-option value="country-3">Tipo 3</mat-option>
+                                    </mat-select>
+                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <mat-form-field class="flex-auto gt-xs:pr-3">
+                                    <mat-select formControlName="distrito" [placeholder]="'Distrito'" required>
+                                        <mat-option value="country-1">Tipo 1</mat-option>
+                                        <mat-option value="country-2">Tipo 2</mat-option>
+                                        <mat-option value="country-3">Tipo 3</mat-option>
+                                    </mat-select>
+                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <mat-form-field class="flex-auto gt-xs:pr-3">
+                                    <mat-select formControlName="centroPoblado" [placeholder]="'Centro Poblado'" required>
+                                        <mat-option value="country-1">Tipo 1</mat-option>
+                                        <mat-option value="country-2">Tipo 2</mat-option>
+                                        <mat-option value="country-3">Tipo 3</mat-option>
+                                    </mat-select>
+                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                </mat-form-field>
+                            </div>
+
                         </div>
                         <div class="flex justify-end mt-8">
                             <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button" matStepperPrevious>

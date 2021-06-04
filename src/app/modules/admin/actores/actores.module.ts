@@ -14,6 +14,10 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import { SharedModule } from '../../../shared/shared.module';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { DateAdapter, MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { CustomDateAdapter } from 'app/core/config/custom-adapter';
+
 
 
 
@@ -56,9 +60,15 @@ const actoresRoutes: Route[] = [
       MatSelectModule,
       MatCheckboxModule,
       MatRadioModule,
-      SharedModule,
       MatInputModule,
+      MatDatepickerModule,
+      MatNativeDateModule,
+      SharedModule,
       RouterModule.forChild(actoresRoutes)
+  ],
+  providers: [
+    {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}, //Necesarios para el data piker personalizado
+    {provide: DateAdapter, useClass: CustomDateAdapter}, //Necesarios para el data piker personalizado
   ]
 })
 export class ActoresModule { }

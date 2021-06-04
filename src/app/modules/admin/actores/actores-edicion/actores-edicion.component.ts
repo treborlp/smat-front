@@ -8,6 +8,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class ActoresEdicionComponent implements OnInit {
 
+  //Fecha seleccionada
+  fechaSeleccionada: Date = new Date();
+  maxFecha: Date = new Date();
+  
+  //Gestión de formulario
   horizontalStepperForm: FormGroup;
 
   constructor(private _formBuilder: FormBuilder) { }
@@ -17,25 +22,27 @@ export class ActoresEdicionComponent implements OnInit {
     // Horizontal stepper form
     this.horizontalStepperForm = this._formBuilder.group({
       step1: this._formBuilder.group({
-          email   : ['', [Validators.required, Validators.email]],
-          country : ['', Validators.required],
           oficina : ['', Validators.required],
-          language: ['', Validators.required]
+          actividadOperativa : ['', Validators.required],
+          personal : ['', Validators.required],
       }),
       step2: this._formBuilder.group({
-          firstName: ['', Validators.required],
-          lastName : ['', Validators.required],
-          userName : ['', Validators.required],
-          about    : ['']
+          unidadMedida: ['', Validators.required],
+          viaEntrega : ['', Validators.required],
+          fecha : ['', Validators.required],
+          estrategia    : ['']
       }),
       step3: this._formBuilder.group({
-              byEmail         : this._formBuilder.group({
-              companyNews     : [true],
-              featuredProducts: [false],
-              messages        : [true]
-          }),
-          pushNotifications: ['everything', Validators.required]
-      })
+          tipoActor: ['', Validators.required],
+          nombreActor : ['', Validators.required],
+          ubicacion: this._formBuilder.group({
+            departamento: ['', Validators.required],
+            provincia : ['', Validators.required],
+            distrito : ['', Validators.required],
+            centroPoblado : ['', Validators.required],
+          })
+          
+    })
   });
   }
 
