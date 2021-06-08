@@ -75,7 +75,8 @@ export const appRoutes: Route[] = [
         },
         children   : [
             {path: 'example', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule)},
-            {path: 'social', loadChildren: () => import('app/modules/admin/actores/actores.module').then(m => m.ActoresModule)}
+            {path: 'social', loadChildren: () => import('app/modules/admin/actores/actores.module').then(m => m.ActoresModule)},
+            {path: 'monitoreo', loadChildren: () => import('app/modules/admin/monitoreo/monitoreo.module').then(m => m.MonitoreoModule)}
         ]
     },
 ];

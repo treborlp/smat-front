@@ -19,12 +19,6 @@ import { DateAdapter, MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/mate
 import { CustomDateAdapter } from 'app/core/config/custom-adapter';
 
 
-
-
-
-
-
-
 const actoresRoutes: Route[] = [
   {
       path     : '',

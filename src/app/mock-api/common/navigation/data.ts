@@ -44,11 +44,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         icon    : 'heroicons_outline:home',
         children: [
             {
-                id      : 'apps.calendar',
+                id      : 'apps.monitoreo',
                 title   : 'Tiempo Real',
                 type    : 'basic',
                 icon    : 'heroicons_outline:calendar',
-                link    : '/apps/calendar'
+                link    : '/monitoreo'
             },
             {
                 id   : 'apps.contacts',
