@@ -12,11 +12,17 @@ import { mockApiServices } from 'app/mock-api';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
+import { JwtModule } from "@auth0/angular-jwt";
+import { environment } from 'environments/environment';
 const routerConfig: ExtraOptions = {
     scrollPositionRestoration: 'enabled',
     preloadingStrategy       : PreloadAllModules,
     relativeLinkResolution   : 'legacy'
 };
+
+export function tokenGetter() {
+    return sessionStorage.getItem("access_token");
+  }
 
 @NgModule({
     declarations: [
@@ -37,9 +43,18 @@ const routerConfig: ExtraOptions = {
 
         // Layout
         LayoutModule,
+        
 
         // 3rd party modules
-        MarkdownModule.forRoot({})
+        MarkdownModule.forRoot({}),
+        JwtModule.forRoot({
+            config: {
+                tokenGetter: tokenGetter,
+                allowedDomains: [`${environment.HOST.substring(7)}`],
+                disallowedRoutes: ["http://example.com/examplebadroute/"],
+              },
+        })
+        
     ],
     bootstrap   : [
         AppComponent

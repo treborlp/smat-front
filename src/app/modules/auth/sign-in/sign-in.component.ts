@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { environment } from 'environments/environment';
 
 @Component({
     selector     : 'auth-sign-in',
@@ -45,8 +46,8 @@ export class AuthSignInComponent implements OnInit
     {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            email     : ['hughes.brian@company.com', [Validators.required, Validators.email]],
-            password  : ['admin', Validators.required],
+            email     : ['', [Validators.required, Validators.email]],
+            password  : ['', Validators.required],
             rememberMe: ['']
         });
     }
@@ -106,4 +107,14 @@ export class AuthSignInComponent implements OnInit
                 }
             );
     }
+
+    iniciarSesion() {
+        this._authService.login(this.signInForm.get('email').value, this.signInForm.get('password').value).subscribe(data => {
+          sessionStorage.setItem(environment.TOKEN_NAME, data.access_token);
+          sessionStorage.setItem(environment.REFRESH_TOKEN, data.refresh_token);
+    
+          this._router.navigate(['example']);
+    
+        });
+      }
 }

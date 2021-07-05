@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
+import { environment } from 'environments/environment';
 
 @Injectable()
 export class AuthService
 {
     private _authenticated: boolean = false;
+    private url: string = `${environment.HOST}/oauth/token`
 
     /**
      * Constructor
@@ -91,6 +93,29 @@ export class AuthService
             })
         );
     }
+
+    //Login fron spring
+    login(usuario: string, contrasena: string) {
+  
+        const body = `grant_type=password&username=${encodeURIComponent(usuario)}&password=${encodeURIComponent(contrasena)}`;
+        this._authenticated = true;
+
+        // Store the user on the user service
+
+        const usertemp: any = {
+        id    : 'cfaad35d-07a3-4447-a6c3-d8c3d54fd5df',
+        name  : 'Brian Hughes',
+        email : 'hughes.brian@company.com',
+        avatar: 'assets/images/avatars/brian-hughes.jpg',
+        status: 'online'
+        }
+        
+        this._userService.user = usertemp;
+        
+        return this._httpClient.post<any>(this.url, body, {
+          headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8').set('Authorization', 'Basic ' + btoa(environment.TOKEN_AUTH_USERNAME + ':' + environment.TOKEN_AUTH_PASSWORD))
+        });
+      }
 
     /**
      * Sign in using the access token

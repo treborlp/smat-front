@@ -4,7 +4,13 @@
 
 export const environment = {
     production: false,
-    urlActores: "http://localhost:5000"
+    urlActores: "http://localhost:5000",
+    HOST: 'http://localhost:8080',
+    TOKEN_AUTH_USERNAME: 'smatapp',
+    TOKEN_AUTH_PASSWORD: '59o0SJ8wMAd0zj4TSf9m*c!E@uX',
+    TOKEN_NAME: 'access_token',
+    REFRESH_TOKEN: 'refresh_token',
+    REINTENTOS: 2
 };
 
 /*
