@@ -108,13 +108,4 @@ export class AuthSignInComponent implements OnInit
             );
     }
 
-    iniciarSesion() {
-        this._authService.login(this.signInForm.get('email').value, this.signInForm.get('password').value).subscribe(data => {
-          sessionStorage.setItem(environment.TOKEN_NAME, data.access_token);
-          sessionStorage.setItem(environment.REFRESH_TOKEN, data.refresh_token);
-    
-          this._router.navigate(['example']);
-    
-        });
-      }
 }

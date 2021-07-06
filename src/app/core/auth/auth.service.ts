@@ -32,11 +32,13 @@ export class AuthService
     set accessToken(token: string)
     {
         localStorage.setItem('access_token', token);
+        //sessionStorage.setItem('access_token', token);
     }
 
     get accessToken(): string
     {
         return localStorage.getItem('access_token') ?? '';
+        //return sessionStorage.getItem('access_token') ?? '';
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -76,17 +78,37 @@ export class AuthService
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type':  'application/x-www-form-urlencoded; charset=UTF-8',
+              'Authorization': 'Basic ' + btoa(environment.TOKEN_AUTH_USERNAME + ':' + environment.TOKEN_AUTH_PASSWORD),
+            }),
+            body: `grant_type=password&username=${encodeURIComponent(credentials.email)}&password=${encodeURIComponent(credentials.password)}`, 
+          };
+
+        return this._httpClient.post(this.url, httpOptions.body, {headers:httpOptions.headers}).pipe(
             switchMap((response: any) => {
 
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
+                console.log(response)
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
                 // Store the user on the user service
-                this._userService.user = response.user;
+                //this._userService.user = response.user;
+                const usertemp: any = 
+                {
+                    id    : 'cfaad35d-07a3-4447-a6c3-d8c3d54fd5df',
+                    name  : 'Brian Hughes',
+                    email : 'hughes.brian@company.com',
+                    avatar: 'assets/images/avatars/brian-hughes.jpg',
+                    status: 'online'
+                }
+
+
+                this._userService.user = usertemp;
 
                 // Return a new observable with the response
                 return of(response);
@@ -94,53 +116,42 @@ export class AuthService
         );
     }
 
-    //Login fron spring
-    login(usuario: string, contrasena: string) {
-  
-        const body = `grant_type=password&username=${encodeURIComponent(usuario)}&password=${encodeURIComponent(contrasena)}`;
-        this._authenticated = true;
-
-        // Store the user on the user service
-
-        const usertemp: any = {
-        id    : 'cfaad35d-07a3-4447-a6c3-d8c3d54fd5df',
-        name  : 'Brian Hughes',
-        email : 'hughes.brian@company.com',
-        avatar: 'assets/images/avatars/brian-hughes.jpg',
-        status: 'online'
-        }
-        
-        this._userService.user = usertemp;
-        
-        return this._httpClient.post<any>(this.url, body, {
-          headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8').set('Authorization', 'Basic ' + btoa(environment.TOKEN_AUTH_USERNAME + ':' + environment.TOKEN_AUTH_PASSWORD))
-        });
-      }
-
-    /**
+     /**
      * Sign in using the access token
      */
     signInUsingToken(): Observable<any>
     {
         // Renew token
         return this._httpClient.post('api/auth/refresh-access-token', {
-            access_token: this.accessToken
+            //access_token: this.accessToken
         }).pipe(
             catchError(() => {
-
                 // Return false
                 return of(false);
             }),
             switchMap((response: any) => {
 
                 // Store the access token in the local storage
-                this.accessToken = response.access_token;
+                //this.accessToken = response.access_token;
+                this.accessToken = this.accessToken;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
                 // Store the user on the user service
-                this._userService.user = response.user;
+
+                const usertemp: any = 
+                {
+                    id    : 'cfaad35d-07a3-4447-a6c3-d8c3d54fd5df',
+                    name  : 'Brian Hughes',
+                    email : 'hughes.brian@company.com',
+                    avatar: 'assets/images/avatars/brian-hughes.jpg',
+                    status: 'online'
+                }
+                
+                this._userService.user = usertemp;
+                //this._userService.user = response.user;
+
 
                 // Return true
                 return of(true);
