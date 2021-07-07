@@ -5,6 +5,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { environment } from 'environments/environment';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable()
 export class AuthService
@@ -78,6 +79,7 @@ export class AuthService
             return throwError('User is already logged in.');
         }
 
+        //Set http parameters
         const httpOptions = {
             headers: new HttpHeaders({
               'Content-Type':  'application/x-www-form-urlencoded; charset=UTF-8',
@@ -91,24 +93,13 @@ export class AuthService
 
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
-                console.log(response)
+
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
                 // Store the user on the user service
-                //this._userService.user = response.user;
-                const usertemp: any = 
-                {
-                    id    : 'cfaad35d-07a3-4447-a6c3-d8c3d54fd5df',
-                    name  : 'Brian Hughes',
-                    email : 'hughes.brian@company.com',
-                    avatar: 'assets/images/avatars/brian-hughes.jpg',
-                    status: 'online'
-                }
-
-
-                this._userService.user = usertemp;
+                this._userService.user = response.user;
 
                 // Return a new observable with the response
                 return of(response);
@@ -139,18 +130,7 @@ export class AuthService
                 this._authenticated = true;
 
                 // Store the user on the user service
-
-                const usertemp: any = 
-                {
-                    id    : 'cfaad35d-07a3-4447-a6c3-d8c3d54fd5df',
-                    name  : 'Brian Hughes',
-                    email : 'hughes.brian@company.com',
-                    avatar: 'assets/images/avatars/brian-hughes.jpg',
-                    status: 'online'
-                }
-                
-                this._userService.user = usertemp;
-                //this._userService.user = response.user;
+                this._userService.user = response.user;
 
 
                 // Return true
