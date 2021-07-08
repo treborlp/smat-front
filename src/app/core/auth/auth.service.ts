@@ -33,14 +33,24 @@ export class AuthService
     set accessToken(token: string)
     {
         localStorage.setItem('access_token', token);
-        //sessionStorage.setItem('access_token', token);
     }
 
     get accessToken(): string
     {
         return localStorage.getItem('access_token') ?? '';
-        //return sessionStorage.getItem('access_token') ?? '';
     }
+
+    set refreshToken(token: string)
+    {
+        localStorage.setItem('refresh_token', token);
+    }
+
+    get refreshToken(): string
+    {
+        return localStorage.getItem('refresh_token') ?? '';
+    }
+
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
@@ -94,6 +104,8 @@ export class AuthService
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
 
+                // Store the access refresh token in local storage
+                // this.refreshToken = response.refresh_token;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
@@ -112,9 +124,17 @@ export class AuthService
      */
     signInUsingToken(): Observable<any>
     {
+        const jwtUtil = new JwtHelperService;
+        const decodeToken = jwtUtil.decodeToken(this.accessToken);
+        const httpOptions = {
+           headers : new HttpHeaders({
+               'Authorization': 'bearer ' + this.accessToken
+           })
+        }
+        
         // Renew token
-        return this._httpClient.post('api/auth/refresh-access-token', {
-            //access_token: this.accessToken
+        return this._httpClient.get(`${environment.HOST}/usuarios/${decodeToken.user_name}`, {
+            headers: httpOptions.headers
         }).pipe(
             catchError(() => {
                 // Return false
@@ -124,14 +144,12 @@ export class AuthService
 
                 // Store the access token in the local storage
                 //this.accessToken = response.access_token;
-                this.accessToken = this.accessToken;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
                 // Store the user on the user service
-                this._userService.user = response.user;
-
+                this._userService.user = response;
 
                 // Return true
                 return of(true);

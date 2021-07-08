@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { AuthService } from 'app/core/auth/auth.service';
 import { DataService } from 'app/core/services/data.service';
 
 @Component({
@@ -11,7 +12,9 @@ export class ExampleComponent
     /**
      * Constructor
      */
-    constructor(private dataService: DataService)
+    constructor(
+        private dataService: DataService,
+        private _authService: AuthService)
     {
     }
 
