@@ -85,20 +85,20 @@ export class AuthForgotPasswordComponent implements OnInit
             )
             .subscribe(
                 (response) => {
-
                     // Set the alert
-                    this.alert = {
-                        type   : 'success',
-                        message: 'Password reset sent! You\'ll receive an email if you are registered on our system.'
-                    };
-                },
-                (response) => {
+                    if(response==1){
+                        this.alert = {
+                            type   : 'success',
+                            message: '¡Se envió el restablecimiento de contraseña! Recibirás un correo electrónico si estás registrado en el sistema.'
+                        };
+                    }
 
-                    // Set the alert
-                    this.alert = {
-                        type   : 'error',
-                        message: 'Email does not found! Are you sure you are already a member?'
-                    };
+                    if(response==0){
+                        this.alert = {
+                            type   : 'error',
+                            message: '¡No se encuentra el correo electrónico! ¿Estás seguro de que ya eres miembro?'
+                        };
+                    }
                 }
             );
     }

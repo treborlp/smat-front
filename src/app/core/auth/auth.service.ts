@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
@@ -63,7 +63,12 @@ export class AuthService
      */
     forgotPassword(email: string): Observable<any>
     {
-        return this._httpClient.post('api/auth/forgot-password', email);
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type':  'text/plain; charset=UTF-8'
+            })
+        }
+        return this._httpClient.post(`${environment.HOST}/login/enviarCorreo`, email, {headers:httpOptions.headers});
     }
 
     /**
@@ -71,9 +76,15 @@ export class AuthService
      *
      * @param password
      */
-    resetPassword(password: string): Observable<any>
+    resetPassword(password: string, token: string): Observable<any>
     {
-        return this._httpClient.post('api/auth/reset-password', password);
+        const body = { clave: password };
+        return this._httpClient.post(`${environment.HOST}/login/restablecer/${token}`, body);
+
+    }
+
+    checkUrlToken(token:string): Observable<any>{
+        return this._httpClient.get(`${environment.HOST}/login/verificar/${token}`)
     }
 
     /**

@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { finalize } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
 import { FuseAnimations } from '@fuse/animations';
 import { FuseValidators } from '@fuse/validators';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+
+
 
 @Component({
     selector     : 'auth-reset-password',
@@ -22,13 +25,16 @@ export class AuthResetPasswordComponent implements OnInit
     };
     resetPasswordForm: FormGroup;
     showAlert: boolean = false;
+    token: string;
 
     /**
      * Constructor
      */
     constructor(
         private _authService: AuthService,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        private _route: ActivatedRoute,
+        private _router: Router
     )
     {
     }
@@ -51,6 +57,18 @@ export class AuthResetPasswordComponent implements OnInit
                 validators: FuseValidators.mustMatch('password', 'passwordConfirm')
             }
         );
+        
+        // Get token
+        this._route.params.subscribe((data: Params) => 
+        {
+            this.token = data['token'];
+        });
+
+        this._authService.checkUrlToken(this.token).subscribe((data)=>{
+            if(data==0){
+                this._router.navigate(['sign-in']);
+            }
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -75,7 +93,7 @@ export class AuthResetPasswordComponent implements OnInit
         this.showAlert = false;
 
         // Send the request to the server
-        this._authService.resetPassword(this.resetPasswordForm.get('password').value)
+        this._authService.resetPassword(this.resetPasswordForm.get('password').value, this.token)
             .pipe(
                 finalize(() => {
 
@@ -93,18 +111,22 @@ export class AuthResetPasswordComponent implements OnInit
                 (response) => {
 
                     // Set the alert
-                    this.alert = {
-                        type   : 'success',
-                        message: 'Your password has been reset.'
-                    };
-                },
-                (response) => {
+                    if(response==1){
+                        this.alert = {
+                            type   : 'success',
+                            message: 'Your password has been reset.'
+                        };
+                    }else{
+                        this.alert = {
+                            type   : 'error',
+                            message: 'Something went wrong, please try again.'
+                        };
+                    }
 
-                    // Set the alert
-                    this.alert = {
-                        type   : 'error',
-                        message: 'Something went wrong, please try again.'
-                    };
+                    setTimeout(()=>
+                    {
+                        this._router.navigate(['sign-in']);
+                    },1500)
                 }
             );
     }

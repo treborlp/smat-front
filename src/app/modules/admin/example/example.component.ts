@@ -13,8 +13,7 @@ export class ExampleComponent
      * Constructor
      */
     constructor(
-        private dataService: DataService,
-        private _authService: AuthService)
+        private dataService: DataService)
     {
     }
 
