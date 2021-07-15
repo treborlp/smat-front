@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { environment } from 'environments/environment';
@@ -11,7 +11,9 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class AuthService
 {
     private _authenticated: boolean = false;
-    private url: string = `${environment.HOST}/oauth/token`
+    
+    //private url: string = `${environment.HOST}/oauth/token`
+    private url: string = `${environment.HOST_KEYCLOUK}/auth/realms/smatapp/protocol/openid-connect/token`
 
     /**
      * Constructor
@@ -92,6 +94,13 @@ export class AuthService
      *
      * @param credentials
      */
+
+    private getEmail(token:any) {
+        const helper = new JwtHelperService();
+        const decodedToken = helper.decodeToken(token.access_token)
+        return decodedToken.email;
+    }
+
     signIn(credentials: { email: string, password: string }): Observable<any>
     {
         // Throw error, if the user is already logged in
@@ -99,34 +108,33 @@ export class AuthService
         {
             return throwError('User is already logged in.');
         }
-
-        //Set http parameters
-        const httpOptions = {
+        const httpOptions = 
+        {
             headers: new HttpHeaders({
-              'Content-Type':  'application/x-www-form-urlencoded; charset=UTF-8',
-              'Authorization': 'Basic ' + btoa(environment.TOKEN_AUTH_USERNAME + ':' + environment.TOKEN_AUTH_PASSWORD),
+              'Content-Type':  'application/x-www-form-urlencoded; charset=UTF-8'
             }),
-            body: `grant_type=password&username=${encodeURIComponent(credentials.email)}&password=${encodeURIComponent(credentials.password)}`, 
-          };
-
+            body: `client_id=smat-backend&grant_type=password&username=${credentials.email}&password=${credentials.password}`, 
+        };
+      
         return this._httpClient.post(this.url, httpOptions.body, {headers:httpOptions.headers}).pipe(
-            switchMap((response: any) => {
+            switchMap((token: any) =>this._httpClient.get(`${environment.HOST}/usuarios/${this.getEmail(token)}`).pipe(
+                    map((user:any)=>{
+                        // Store the access token in the local storage
+                        this.accessToken = token.access_token;
 
-                // Store the access token in the local storage
-                this.accessToken = response.access_token;
+                        // Store the refresh token in the local storage
+                        this.refreshToken = token.refresh_token;
 
-                // Store the access refresh token in local storage
-                // this.refreshToken = response.refresh_token;
+                        // Set the authenticated flag to true
+                        this._authenticated = true;
 
-                // Set the authenticated flag to true
-                this._authenticated = true;
+                        // Set the user
+                        this._userService.user = user
 
-                // Store the user on the user service
-                this._userService.user = response.user;
-
-                // Return a new observable with the response
-                return of(response);
-            })
+                        return of(token);
+                    })
+                )
+             )
         );
     }
 
@@ -137,34 +145,42 @@ export class AuthService
     {
         const jwtUtil = new JwtHelperService;
         const decodeToken = jwtUtil.decodeToken(this.accessToken);
-        const httpOptions = {
-           headers : new HttpHeaders({
-               'Authorization': 'bearer ' + this.accessToken
-           })
-        }
+
+        const httpOptions = 
+        {
+            headers: new HttpHeaders({
+              'Content-Type':  'application/x-www-form-urlencoded; charset=UTF-8'
+            }),
+            body: `client_id=smat-backend&grant_type=refresh_token&refresh_token=${this.refreshToken}`, 
+        };
         
         // Renew token
-        return this._httpClient.get(`${environment.HOST}/usuarios/${decodeToken.user_name}`, {
+        return this._httpClient.post(`${this.url}`, httpOptions.body, {
             headers: httpOptions.headers
         }).pipe(
             catchError(() => {
                 // Return false
                 return of(false);
             }),
-            switchMap((response: any) => {
+            switchMap((token: any) => this._httpClient.get(`${environment.HOST}/usuarios/${this.getEmail(token)}`).pipe(
+                map((user:any)=>{
 
-                // Store the access token in the local storage
-                //this.accessToken = response.access_token;
+                    // Store the access token in the local storage
+                    this.accessToken = token.access_token;
 
-                // Set the authenticated flag to true
-                this._authenticated = true;
+                    // Store the refresh token in the local storage
+                    this.refreshToken = token.refresh_token;
 
-                // Store the user on the user service
-                this._userService.user = response;
+                    // Set the authenticated flag to true
+                    this._authenticated = true;
 
-                // Return true
-                return of(true);
-            })
+                    // Set the user
+                    this._userService.user = user
+
+
+                    return of(true);
+                
+            })))
         );
     }
 

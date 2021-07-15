@@ -6,6 +6,7 @@ export const environment = {
     production: false,
     urlActores: "http://localhost:5000",
     HOST: 'http://localhost:8080',
+    HOST_KEYCLOUK: 'http://192.168.100.79:8080',
     TOKEN_AUTH_USERNAME: 'smatapp',
     TOKEN_AUTH_PASSWORD: '59o0SJ8wMAd0zj4TSf9m*c!E@uX',
     TOKEN_NAME: 'access_token',
